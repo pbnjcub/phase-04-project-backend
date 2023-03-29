@@ -1,3 +1,5 @@
+# README
+
 #read me for phase 4 backend
 
 REPRESENTATIONAL STATE TRANSFER
@@ -16,5 +18,6 @@ delete                  /students/:id           destroy
 
 MVC - Model, View, Controller
 Model - communicates with the database, inherits from Active Record
-View - shows the user the data
+View - displays the data to the client (browser) handled by react
+Controller - interacts between the Model and the View
 
