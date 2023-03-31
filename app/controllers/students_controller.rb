@@ -22,9 +22,31 @@ class StudentsController < ApplicationController
         end
     end
 
+    def update
+        student = Student.find_by(id: params[:id])
+        if student
+            student.update(student_params)
+            render json: student
+        else
+            render json: student.errors, status: :unprocessable_entity
+        end
+    end
+
+    def destroy
+        student = Student.find_by(id: params[:id])
+        if student
+            student.destroy
+            head :no_content
+        else
+            render json: {error: "Student not found"}, status: 404
+        end
+    end
+    
+
     private
 
     def student_params
         params.require(:student).permit(:first_name, :last_name)
     end
+
 end
