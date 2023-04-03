@@ -1,7 +1,7 @@
 class StudentsController < ApplicationController
     def index
         students = Student.all
-        render json: students
+        render json: students, include: [:subjects, :assignments]
     end
 
     def show
@@ -18,17 +18,20 @@ class StudentsController < ApplicationController
         if student.save
             render json: student, status: :created
         else
-            render json: student.errors, status: :unprocessable_entity
+            render json: {errors: student.errors.full_messages}, status: :unprocessable_entity
         end
     end
 
     def update
         student = Student.find_by(id: params[:id])
         if student
-            student.update(student_params)
-            render json: student
+            if student.update(student_params)
+                render json: student
+            else
+                render json: {errors: student.errors.full_messages}, status: :unprocessable_entity
+            end
         else
-            render json: student.errors, status: :unprocessable_entity
+            render json: {error: "Student not found"}, status: 404
         end
     end
 
