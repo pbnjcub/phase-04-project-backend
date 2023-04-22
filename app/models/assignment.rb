@@ -1,8 +1,8 @@
 class Assignment < ApplicationRecord
-    belongs_to :subject
+    belongs_to :course
     belongs_to :student
 
-    validates :subject_id, presence: true
+    validates :course_id, presence: true
     validates :student_id, presence: true
     validates :grade, presence: true
     validates :grade, numericality: { only_integer: true }

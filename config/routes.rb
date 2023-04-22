@@ -4,6 +4,6 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
   resources :students, only: [:index, :show, :create, :update, :destroy]
-  resources :subjects, only: [:index, :show, :create, :update, :destroy]
+  resources :courses, only: [:index, :show, :create, :update, :destroy]
   resources :assignments, only: [:index, :show, :create, :update, :destroy]
 end

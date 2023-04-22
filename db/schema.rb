@@ -10,16 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_08_224844) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_22_200104) do
   create_table "assignments", force: :cascade do |t|
     t.string "name"
     t.string "type_of"
     t.date "due_date"
     t.integer "grade"
     t.integer "student_id"
-    t.integer "subject_id"
+    t.integer "course_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "courses", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "teacher_id"
   end
 
   create_table "students", force: :cascade do |t|
@@ -27,13 +34,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_08_224844) do
     t.string "first_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "subjects", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "teacher_id"
   end
 
   create_table "teachers", force: :cascade do |t|
