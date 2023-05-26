@@ -1,13 +1,13 @@
 class CoursesController < ApplicationController
     def index
         courses = Course.all
-        render json: courses, include: :teacher
+        render json: courses, include: '*'
     end
 
     def show
         course = Course.find_by(id: params[:id])
         if course
-            render json: course, include: :teacher
+            render json: course
         else
             render json: {error: "Course not found"}, status: 404
         end
@@ -24,11 +24,14 @@ class CoursesController < ApplicationController
 
     def update
         course = Course.find_by(id: params[:id])
-        if course.save
-            course.update(course_params)
-            render json: course
+        if course
+            if course.update(course_params)
+                render json: course
+            else
+                render json: {errors: course.errors.full_messages}, status: :unprocessable_entity
+            end
         else
-            render json: {errors: course.errors.full_messages}, status: :unprocessable_entity
+            render json: {error: "Course not found"}, status: 404
         end
     end
 
