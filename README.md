@@ -18,9 +18,10 @@ delete                  /students/:id           destroy
 
 MVC - Model, View, Controller
 Model - communicates with the database, inherits from Active Record
-    Students have many Courses, through Assignments
-    Courses have many Students, through Assignments
+    Students have many Courses, through StudentCourses
+    Courses have many Students, through StudentCourses
     Teachers have many courses
+    
 View - displays the data to the client (browser) handled by react
 Controller - interacts between the Model and the View => this is the request response flow
 

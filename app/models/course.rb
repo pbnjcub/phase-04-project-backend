@@ -1,6 +1,6 @@
 class Course < ApplicationRecord
-    has_many :assignments, dependent: :destroy
-    has_many :students, through: :assignments
+    has_many :courses_students, dependent: :destroy
+    has_many :students, through: :courses_students
     belongs_to :teacher
 
     validates :name, presence: true

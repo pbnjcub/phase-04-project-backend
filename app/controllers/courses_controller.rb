@@ -1,13 +1,13 @@
 class CoursesController < ApplicationController
     def index
         courses = Course.all
-        render json: courses, include: '*'
+        render json: courses, include: [:teacher, :students]
     end
 
     def show
         course = Course.find_by(id: params[:id])
         if course
-            render json: course
+            render json: course, include: [:teacher, :students]
         else
             render json: {error: "Course not found"}, status: 404
         end
