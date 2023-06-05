@@ -8,6 +8,11 @@ Bundler.require(*Rails.groups)
 
 module Phase04ProjectBackend
   class Application < Rails::Application
+
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore
+
+    config.action_dispatch.cookies_same_site_protection = :strict
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
@@ -35,10 +40,9 @@ module Phase04ProjectBackend
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    config.middleware.use ActionDispatch::Cookies
-    config.middleware.use ActionDispatch::Session::CookieStore
 
-    config.action_dispatch.cookies_same_site_protection = :strict
+
+
 
   end
 end

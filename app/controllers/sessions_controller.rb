@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+    #create a new session, not user
     def create
         @user = User.find_by(username: params[:username])
         #authenticate is a new method that comes from BCrypt. It takes a string and hashes it and compares it to the password_digest
