@@ -1,4 +1,9 @@
 class UsersController < ApplicationController
+
+    def index
+        @users = User.all
+        render json: @users, include: ['teacher']
+    end
     #signup - create account and log in user
     def create
         @user = User.new(user_params)
