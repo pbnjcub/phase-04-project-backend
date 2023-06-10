@@ -16,7 +16,7 @@ class StudentsController < ApplicationController
     def create
         student = Student.new(student_params)
         if student.save
-            coursesstudent = CoursesStudent.create(student_id: student.id, course_id: params[:course_id])
+            coursesstudent = CoursesStudent.create(student_id: student.id, course_id: params[:course_id], grade: params[:grade])
             render json: student, status: :created
         else
             render json: {errors: student.errors.full_messages}, status: :unprocessable_entity
