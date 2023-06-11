@@ -3,7 +3,7 @@ class CoursesStudentsController < ApplicationController
         coursesstudents = CoursesStudent.all
         render json: coursesstudents, include: [:course, :student]
     end
-    
+
     
     def create
         coursesstudent = CoursesStudent.create(student_id: params[:student_id], course_id: params[:course_id], grade: params[:grade])
@@ -24,9 +24,12 @@ class CoursesStudentsController < ApplicationController
     end
 
     def destroy
-        coursesstudent = CoursesStudent.find_by(id: params[:id])
-        if coursesstudent
-            coursesstudent.destroy
+        student_id = params[:student_id]
+        course_id = params[:course_id]
+
+        courses_student = CoursesStudent.find_by(student_id: student_id, course_id: course_id)
+        if courses_student
+            courses_student.destroy
             head :no_content
         else
             render json: {error: "Student not enrolled or does not exist"}, status: 404
