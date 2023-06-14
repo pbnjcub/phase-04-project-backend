@@ -26,7 +26,7 @@ class CoursesController < ApplicationController
         course = Course.find_by(id: params[:id])
         if course
             if course.update(course_params)
-                render json: course
+                render json: course, status: :accepted, include: [:teacher, :students, :courses_students]
             else
                 render json: {errors: course.errors.full_messages}, status: :unprocessable_entity
             end
