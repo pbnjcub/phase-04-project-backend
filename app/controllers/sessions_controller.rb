@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
             login_user #creates new session
             render json: @user, status: :created
         else
-            render json: {errors: @user.errors.full_messages}, status: :unprocessable_entity
+            render json: {errors:['Invalid username or password']}, status: :unprocessable_entity
         end
     end
 
