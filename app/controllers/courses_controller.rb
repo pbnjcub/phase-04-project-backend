@@ -1,51 +1,50 @@
 class CoursesController < ApplicationController
+    before_action :set_teacher
+    before_action :set_course, except: [:index, :create]
+
     def index
-        courses = Course.all
-        render json: courses, include: [:teacher, :students, :courses_students]
+        courses = @teacher.courses
+        render json: courses, include: [:students, :courses_students]
     end
 
     def show
-        course = Course.find_by(id: params[:id])
-        if course
-            render json: course, include: [:teacher, :students, :courses_students]
-        else
-            render json: {error: "Course not found"}, status: 404
-        end
+        render json: @course, include: [:teacher, :students, :courses_students]
     end
 
     def create
-        course = Course.new(course_params)
+        course = @teacher.courses.build(course_params)
+
         if course.save
-            render json: course, status: :created
+            render json: course, status: :created, include: [:teacher, :students, :courses_students]
         else
             render json: {errors: course.errors.full_messages}, status: :unprocessable_entity
         end
     end
 
     def update
-        course = Course.find_by(id: params[:id])
-        if course
-            if course.update(course_params)
-                render json: course, status: :accepted, include: [:teacher, :students, :courses_students]
-            else
-                render json: {errors: course.errors.full_messages}, status: :unprocessable_entity
-            end
+        if @course.update(course_params)
+            render json: @course, status: :accepted, include: [:teacher, :students, :courses_students]
         else
-            render json: {error: "Course not found"}, status: 404
+            render json: {errors: @course.errors.full_messages}, status: :unprocessable_entity
         end
     end
 
     def destroy
-        course = Course.find_by(id: params[:id])
-        if course
-            course.destroy
-            head :no_content
-        else
-            render json: {error: "Course not found"}, status: 404
-        end
+        @course.destroy
+        head :no_content
     end
 
     private
+
+    def set_teacher
+        @teacher = Teacher.find(params[:teacher_id])
+        render json: {error: "Teacher not found"}, status: 404 unless @teacher
+    end
+
+    def set_course
+        @course = @teacher.courses.find_by(id: params[:id])
+        render json: {error: "Course not found"}, status: 404 unless @course
+    end
 
     def course_params
         params.require(:course).permit(:name, :teacher_id)

@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
         if @user && @user.authenticate(params[:password])
             #logs in user
             login_user #creates new session
-            render json: @user, status: :created
+            render json: @user, status: :created, include: ['teacher']
         else
             render json: {errors:['Invalid username or password']}, status: :unprocessable_entity
         end

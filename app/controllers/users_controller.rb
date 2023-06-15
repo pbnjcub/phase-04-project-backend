@@ -10,7 +10,7 @@ class UsersController < ApplicationController
         if @user.save
             #logs in user
             login_user #creates new session
-            render json: @user, status: :created
+            render json: @user, status: :created, include: ['teacher']
         else
             render json: {errors: @user.errors.full_messages}, status: :unprocessable_entity
         end
@@ -18,7 +18,7 @@ class UsersController < ApplicationController
 
     def get_current_user
         if logged_in?
-            render json: current_user, status: :ok
+            render json: current_user, status: :ok, include: ['teacher']
         else
             render json: {error: "No current user"}, status: :unprocessable_entity
         end
