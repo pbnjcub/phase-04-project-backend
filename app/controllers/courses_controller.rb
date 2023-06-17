@@ -8,7 +8,7 @@ class CoursesController < ApplicationController
     def index
         if params[:teacher_id].present?
             teacher = Teacher.find(params[:teacher_id])
-            courses = teacher.courses
+            courses = current_teacher.courses
         elsif params[:student_id].present?
             student = Student.find(params[:student_id])
             courses = student.courses
@@ -19,11 +19,11 @@ class CoursesController < ApplicationController
     end
 
     def show
-        course = Course.find_by(id: params[:id])
-        if course
-            render json: course, include: [:teacher, :students, :courses_students]
+        find_course
+        if @course
+            render json: @course, include: [:teacher, :students, :courses_students]
         else
-            render json: {error: "Course not found"}, status: 404
+            render_not_found_response
         end
     end
 
@@ -42,25 +42,25 @@ class CoursesController < ApplicationController
     end
 
     def update
-        course = Course.find_by(id: params[:id])
-        if course
-            if course.update(course_params)
-                render json: course, status: :accepted, include: [:teacher, :students, :courses_students]
+        find_course
+        if @course
+            if @course.update(course_params)
+                render json: @course, status: :accepted, include: [:teacher, :students, :courses_students]
             else
-                render json: {errors: course.errors.full_messages}, status: :unprocessable_entity
+                render json: {errors: @course.errors.full_messages}, status: :unprocessable_entity
             end
         else
-            render json: {error: "Course not found"}, status: 404
+            render_not_found_response
         end
     end
 
     def destroy
-        course = Course.find_by(id: params[:id])
-        if course
-            course.destroy
+        find_course
+        if @course
+            @course.destroy
             head :no_content
         else
-            render json: {error: "Course not found"}, status: 404
+            render_not_found_response
         end
     end
 
@@ -68,6 +68,14 @@ class CoursesController < ApplicationController
 
     def course_params
         params.require(:course).permit(:name, :teacher_id)
+    end
+
+    def find_course
+        @course = Course.find_by(id: params[:id])
+    end
+
+    def render_not_found_response
+        render json: { error: "Course not found" }, status: 404
     end
 
 

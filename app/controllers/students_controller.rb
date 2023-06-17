@@ -16,12 +16,12 @@ class StudentsController < ApplicationController
     end
 
     def show
-        student = Student.find_by(id: params[:id])
+        find_student
         
-        if student
-          render json: student, include: [:courses, :courses_students]
+        if @student
+            render_student(@student)
         else
-          render json: { error: "Student not found" }, status: 404
+            render_not_found_response
         end
       end
 
@@ -35,25 +35,25 @@ class StudentsController < ApplicationController
     end
 
     def update
-        student = Student.find_by(id: params[:id])
-        if student
-            if student.update(student_params)
-                render json: student, include: [:courses, :courses_students]
+        find_student
+        if @student
+            if @student.update(student_params)
+                render_student(@student)
             else
                 render json: {errors: student.errors.full_messages}, status: :unprocessable_entity
             end
         else
-            render json: {error: "Student not found"}, status: 404
+            render_not_found_response
         end
     end
 
     def destroy
-        student = Student.find_by(id: params[:id])
-        if student
-            student.destroy
+        find_student
+        if @student
+            @student.destroy
             head :no_content
         else
-            render json: {error: "Student not found"}, status: 404
+            render_not_found_response
         end
     end
     
@@ -62,6 +62,18 @@ class StudentsController < ApplicationController
 
     def student_params
         params.require(:student).permit(:id, :first_name, :last_name)
+    end
+
+    def find_student
+        @student = Student.find_by(id: params[:id])
+    end
+
+    def render_student(student)
+        render json: student, include: [:courses, :courses_students]
+    end
+
+    def render_not_found_response
+        render json: { error: "Student not found" }, status: 404
     end
 
 end
