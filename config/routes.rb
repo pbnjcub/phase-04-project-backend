@@ -27,4 +27,6 @@ Rails.application.routes.draw do
   get '/current-user', to: 'users#get_current_user'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
+  get 'all_courses', to: 'courses#all_courses'
+
 end
