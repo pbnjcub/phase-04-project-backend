@@ -1,15 +1,16 @@
 Rails.application.routes.draw do
-  resources :users, only: [:index]
+  # resources :users, only: [:index]
+  resources :sessions, only: [:index]
 
-  resources :students, only: [:index, :show, :create, :update, :destroy] do
+  resources :students do
     collection do
       get 'all_students', to: 'students#all_students'
     end
-    resources :courses, only: [:index, :create, :update, :destroy]
+    resources :courses
   end
 
-  resources :teachers, only: [:index, :show, :create, :update, :destroy] do
-    resources :courses, only: [:index, :create, :update, :destroy] do
+  resources :teachers do
+    resources :courses do
       member do
         post 'enroll/:student_id', to: 'courses_students#create'
         delete 'unenroll/:student_id', to: 'courses_students#destroy'
@@ -17,16 +18,18 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :courses, only: [:index, :show, :create, :update, :destroy] do
-    resources :students, only: [:index, :create, :update, :destroy]
+  resources :courses do
+    resources :students
   end
 
-  resources :courses_students, only: [:index, :update]
+  resources :courses_students
 
   post '/signup', to: 'users#create'
   get '/current-user', to: 'users#get_current_user'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
-  get 'all_courses', to: 'courses#all_courses'
+  get '/all_courses', to: 'courses#all_courses'
+  get '/all_students', to: 'students#all_students'
+
 
 end

@@ -1,10 +1,10 @@
 class CoursesStudentsController < ApplicationController
+
     def index
         courses_students = CoursesStudent.all
         render json: courses_students, include: [:course, :student]
     end
 
-    
     def create
         courses_student = CoursesStudent.create(student_id: params[:student_id], course_id: params[:course_id], grade: params[:grade])
         render json: courses_student, status: :created

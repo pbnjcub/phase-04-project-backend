@@ -1,27 +1,28 @@
 class CoursesController < ApplicationController
+    before_action :authorize
 
     def all_courses
         courses = Course.all
-        render json: courses, include: [:students, :courses_students]
+        render json: courses, each_serializer: CourseSerializer
     end
 
     def index
         if params[:teacher_id].present?
             teacher = Teacher.find(params[:teacher_id])
-            courses = current_teacher.courses
+            courses = teacher.courses
         elsif params[:student_id].present?
             student = Student.find(params[:student_id])
             courses = student.courses
         else
             courses = Course.all
         end
-        render json: courses, include: [:students, :courses_students]
+        render json: courses, each_serializer: CourseSerializer
     end
 
     def show
         find_course
         if @course
-            render json: @course, include: [:teacher, :students, :courses_students]
+            render json: @course, serializer: CourseSerializer
         else
             render_not_found_response
         end
@@ -32,7 +33,7 @@ class CoursesController < ApplicationController
         if teacher
             course = teacher.courses.build(course_params)
             if course.save
-                render json: course, status: :created, include: [:teacher, :students, :courses_students]
+                render json: course, status: :created, serializer: CourseSerializer
             else
                 render json: {errors: course.errors.full_messages}, status: :unprocessable_entity
             end
@@ -45,7 +46,7 @@ class CoursesController < ApplicationController
         find_course
         if @course
             if @course.update(course_params)
-                render json: @course, status: :accepted, include: [:teacher, :students, :courses_students]
+                render json: @course, status: :accepted, serializer: CourseSerializer
             else
                 render json: {errors: @course.errors.full_messages}, status: :unprocessable_entity
             end
@@ -76,6 +77,10 @@ class CoursesController < ApplicationController
 
     def render_not_found_response
         render json: { error: "Course not found" }, status: 404
+    end
+
+    def authorize
+        return render json: { error: "Not authorized" }, status: :unauthorized unless session[:user_id]
     end
 
 

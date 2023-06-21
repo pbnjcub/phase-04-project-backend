@@ -1,7 +1,9 @@
 class TeachersController < ApplicationController
+   
+
     def index
         teachers = Teacher.all
-        render json: teachers, include: :courses
+        render json: teachers, each_serializer: TeacherSerializer
     end
 
     def show
@@ -16,7 +18,7 @@ class TeachersController < ApplicationController
     def create
         teacher = Teacher.new(teacher_params)
         if teacher.save
-            render json: teacher, status: :created, include: :courses
+            render json: teacher, status: :created, serializer: TeacherSerializer
         else
             render json: {errors: teacher.errors.full_messages}, status: :unprocessable_entity
         end
@@ -57,7 +59,7 @@ class TeachersController < ApplicationController
     end
 
     def render_teacher(teacher)
-        render json: teacher, include: :courses
+        render json: teacher, serializer: TeacherSerializer
     end
 
     def render_not_found_response

@@ -1,15 +1,16 @@
 class StudentsController < ApplicationController
+    before_action :authorize, except: [:show]
 
     def all_students
         students = Student.all
-        render json: students, include: [:courses, :courses_students]
+        render json: students, each_serializer: StudentSerializer
     end
 
     def index
         course = Course.find(params[:course_id])
         if course
             students = course.students
-            render json: students, include: [:courses, :courses_students]
+            render json: students, each_serializer: StudentSerializer
         else
             render json: {error: "Course not found"}, status: 404
         end
@@ -28,7 +29,7 @@ class StudentsController < ApplicationController
     def create
         student = Student.new(student_params)
         if student.save
-            render json: student, status: :created, include: [:courses, :courses_students]
+            render json: student, status: :created, serializer: StudentSerializer
         else
             render json: {errors: student.errors.full_messages}, status: :unprocessable_entity
         end
@@ -69,11 +70,15 @@ class StudentsController < ApplicationController
     end
 
     def render_student(student)
-        render json: student, include: [:courses, :courses_students]
+        render json: student, serializer: StudentSerializer
     end
 
     def render_not_found_response
         render json: { error: "Student not found" }, status: 404
+    end
+
+    def authorize
+        return render json: { error: "Not authorized" }, status: :unauthorized unless session[:user_id]
     end
 
 end

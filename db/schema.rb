@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_10_134033) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_21_033937) do
   create_table "courses", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -47,6 +47,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_10_134033) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "admin", default: true
   end
 
 end
