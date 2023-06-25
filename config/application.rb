@@ -8,24 +8,26 @@ Bundler.require(*Rails.groups)
 
 module Phase04ProjectBackend
   class Application < Rails::Application
-    
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
+    
 
-    config.action_dispatch.cookies_same_site_protection = :strict
+    # config.action_dispatch.cookies_same_site_protection = :strict
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
     config.api_only = true
 
 
+
     
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins "*"
+        origins "http://localhost:4000"
     
         resource "*",
           headers: :any,
-          methods: [:get, :post, :put, :patch, :delete, :options, :head]
+          methods: [:get, :post, :put, :patch, :delete, :options, :head],
+          credentials: true
       end
     end
     # Configuration for the application, engines, and railties goes here.

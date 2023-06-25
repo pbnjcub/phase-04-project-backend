@@ -10,20 +10,22 @@ Rails.application.routes.draw do
   end
 
   resources :teachers do
-    resources :courses do
-      member do
-        post 'enroll/:student_id', to: 'courses_students#create'
-        delete 'unenroll/:student_id', to: 'courses_students#destroy'
-      end
-    end
+    resources :courses
+      # member do
+      #   post 'enroll/:student_id', to: 'courses_students#create'
+      #   delete 'unenroll/:student_id', to: 'courses_students#destroy'
+      # end
   end
 
   resources :courses do
     resources :students
   end
 
-  resources :courses_students
+  get '/courses_students/:grade', to: 'courses_students#find_grade'
 
+  # resources :courses_students
+  post '/courses/:course_id/enroll/:student_id', to: 'courses_students#create'
+  delete '/courses/:course_id/unenroll/:student_id', to: 'courses_students#destroy'
   post '/signup', to: 'users#create'
   get '/current-user', to: 'users#get_current_user'
   post '/login', to: 'sessions#create'

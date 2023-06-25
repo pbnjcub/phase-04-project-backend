@@ -105,4 +105,9 @@ delete                  /students/:id           destroy
 
 -----------------------------------------------------------
 
+Find all course_students with a specific grade, submitted as a param (i.e. A, B, C). If no course_students are found then render json that says so. If you do find specific course students render the teachers that are connected to those specific course students through the courses. Render json back of all the teachers who have course_students with those grades.
 
+#create a route in config/routes that will pass a grade param to a controller action 
+get 'courses_students/:grade', to: 'courses_students#find_grade'
+
+#write a route called find_grade in the courses_students controller

@@ -1,5 +1,6 @@
 class CoursesController < ApplicationController
-    before_action :authorize
+    skip_before_action :confirm_authentication, only: [:index]
+
 
     def all_courses
         courses = Course.all
@@ -16,7 +17,7 @@ class CoursesController < ApplicationController
         else
             courses = Course.all
         end
-        render json: courses, each_serializer: CourseSerializer
+        render json: courses, each_serializer: CourseSerializer, include: [:courses_students]
     end
 
     def show
@@ -79,9 +80,9 @@ class CoursesController < ApplicationController
         render json: { error: "Course not found" }, status: 404
     end
 
-    def authorize
-        return render json: { error: "Not authorized" }, status: :unauthorized unless session[:user_id]
-    end
+    # def authorize
+    #     return render json: { error: "Not authorized" }, status: :unauthorized unless session[:user_id]
+    # end
 
 
 end

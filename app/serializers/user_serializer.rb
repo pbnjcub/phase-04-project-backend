@@ -6,4 +6,5 @@ class UserSerializer < ActiveModel::Serializer
     object.teacher.present?
   end
 
+
 end

@@ -1,28 +1,11 @@
 class SessionsController < ApplicationController
-    # skip_before_action :confirm_authentication
+    skip_before_action :confirm_authentication, only: [:create]
     #create a new session, not user
-
-    def index
-        if session[:user_id]
-            user = User.find(session[:user_id])
-            render json: user, status: :ok, include: ['teacher']
-        else
-            render json: {errors:['Invalid username or password']}, status: :unprocessable_entity
-        end
-    end
-
-    # def index
-    #     if session[:user_id]
-    #         user = User.find(session[:user_id])
-    #         render json: user, status: :ok, include: ['teacher']
-    #     else
-    #         head :no_content
-    #     end
-    # end
 
     def create
         user = User.find_by(username: params[:username])
         if user.authenticate(params[:password])
+            puts "session object: ${session[:user_id]}"
             session[:user_id] = user.id
             render json: user, status: :ok, include: ['teacher']
         else

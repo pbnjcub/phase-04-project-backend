@@ -1,4 +1,6 @@
 class CoursesStudentsController < ApplicationController
+    skip_before_action :confirm_authentication, only: [:find_grade]
+
 
     def index
         courses_students = CoursesStudent.all
@@ -21,6 +23,18 @@ class CoursesStudentsController < ApplicationController
         else
             render json: {error: "Student not enrolled"}, status: 404
         end
+    end
+
+    def find_grade
+        #filter all objects so that only the ones with the grade returns
+        grades = CoursesStudent.all.filter{|student| student.grade === params[:grade].to_s}
+        #find all course ids associated with grades
+        course_ids = grades.map{|grade| grade.course_id}
+        courses = course_ids.map do |course_id|
+            Course.all.find{|course| course.id == course_id}
+        end
+        teachers = courses.map{|course| course.teacher}
+        render json: teachers
     end
 
     def destroy

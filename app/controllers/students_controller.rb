@@ -1,5 +1,5 @@
 class StudentsController < ApplicationController
-    before_action :authorize, except: [:show]
+    skip_before_action :confirm_authentication, only: [:all_students]
 
     def all_students
         students = Student.all
